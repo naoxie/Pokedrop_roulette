@@ -468,7 +468,7 @@
           image.addEventListener("error", () => reject(new Error(image.src)), { once: true });
         });
       }));
-      document.querySelector(".probability-note").textContent = `${(CONFIG.winProbability * 100).toLocaleString("fr-FR", { maximumFractionDigits: 2 })} % de chance de gagner à chaque lancer`;
+      //document.querySelector(".probability-note").textContent = `${(CONFIG.winProbability * 100).toLocaleString("fr-FR", { maximumFractionDigits: 2 })} % de chance de gagner à chaque lancer`;
       setPhase("idle");
       spinStatus.textContent = "À vous de jouer !";
     } catch (error) {
