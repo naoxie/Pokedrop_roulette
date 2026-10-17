@@ -4,7 +4,7 @@
   // 1. CONFIGURATION — modifier ici la probabilité et la durée (millisecondes).
   // Les surfaces graphiques sont égales, mais ne déterminent pas le tirage.
   const CONFIG = {
-    winProbability: 0.35,
+    winProbability: 0.15,
     spinDuration: 6500,
     minRotations: 5,
     maxRotations: 8
