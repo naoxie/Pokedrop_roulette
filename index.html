@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#080318">
+  <meta name="description" content="La roulette de fidélité PokeDrop : tentez de remporter un booster Pokémon supplémentaire !">
+  <title>PokeDrop Roulette — À vous de jouer !</title>
+  <link rel="icon" href="data:,">
+  <link rel="preload" as="image" href="assets/img/Background_mobile.png">
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/main.js" defer></script>
+</head>
+<body>
+  <div class="scene-background" aria-hidden="true"></div>
+  <div class="scene-dimmer" aria-hidden="true"></div>
+
+  <main class="game" id="game">
+    <header class="brand">
+      <h1 class="brand-title">
+        <img class="brand-logo" src="assets/img/Pokedrop.png" alt="PokeDrop Roulette" width="1983" height="793" fetchpriority="high" draggable="false">
+      </h1>
+      <p class="eyebrow"><span></span> La roue de la fidélité <span></span></p>
+    </header>
+
+    <section class="play-area" aria-label="Roulette de fidélité">
+      <div class="wheel" id="wheel" aria-busy="false">
+        <div class="wheel-halo" aria-hidden="true"></div>
+
+        <!-- Le PNG fourni contient déjà les quatre quartiers. Le SVG conserve
+             leur graphisme original, sans modifier ni recréer les images. -->
+        <div class="wheel-rotor">
+        <svg class="wheel-disc" id="wheel-disc" viewBox="0 0 1254 1254" role="img" aria-labelledby="wheel-title wheel-description">
+          <title id="wheel-title">Roulette à quatre quartiers</title>
+          <desc id="wheel-description">Au départ : gagner en haut à gauche et en bas à droite, perdu en haut à droite et en bas à gauche.</desc>
+          <defs>
+            <pattern id="wheel-art" patternUnits="userSpaceOnUse" width="1254" height="1254">
+              <image href="assets/img/roulette_centrale.png" width="1254" height="1254"/>
+            </pattern>
+          </defs>
+          <g fill="url(#wheel-art)">
+            <path data-segment="0" data-result="lose" d="M627 627V0A627 627 0 0 1 1254 627Z"><title>PERDU</title></path>
+            <path data-segment="1" data-result="win" d="M627 627H1254A627 627 0 0 1 627 1254Z"><title>GAGNER</title></path>
+            <path data-segment="2" data-result="lose" d="M627 627V1254A627 627 0 0 1 0 627Z"><title>PERDU</title></path>
+            <path data-segment="3" data-result="win" d="M627 627H0A627 627 0 0 1 627 0Z"><title>GAGNER</title></path>
+          </g>
+        </svg>
+        </div>
+
+        <!-- Calque frère du disque : seule la Pokéball du même PNG est visible.
+             Ce calque et l'indicateur ne reçoivent jamais de rotation. -->
+        <img class="wheel-center" src="assets/img/roulette_centrale.png" alt="" width="1254" height="1254" draggable="false" aria-hidden="true">
+        <div class="wheel-pointer" aria-hidden="true">
+          <img src="assets/img/fléche.png" alt="" width="1312" height="1199" draggable="false">
+        </div>
+      </div>
+
+      <div class="controls">
+        <button class="spin-button" id="spin-button" type="button" aria-label="Lancer la roulette" aria-describedby="spin-status" disabled>
+          <img src="assets/img/btn_lancer.png" alt="LANCER" width="2172" height="724" draggable="false">
+        </button>
+        <p class="spin-status" id="spin-status" role="status" aria-live="polite" aria-atomic="true">Préparation de la roulette…</p>
+      </div>
+    </section>
+
+    <aside class="gift-card" aria-label="Votre cadeau fidélité">
+      <div class="gift-heading">
+        <svg class="gift-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M5 15h22v13H5zM3 10h26v5H3zM16 10v18M16 10H9a4 4 0 1 1 4-4l3 4Zm0 0h7a4 4 0 1 0-4-4l-3 4Z"/>
+        </svg>
+        <span>Un booster en plus ?</span>
+      </div>
+      <p>Tentez votre chance et découvrez si vous gagnez un <strong>booster supplémentaire !</strong></p>
+      <p class="thank-you">Merci pour votre fidélité !</p>
+    </aside>
+    <!--<p class="probability-note">35 % de chance de gagner à chaque lancer</p>-->
+    <noscript><p class="noscript-message">Activez JavaScript pour lancer la roulette.</p></noscript>
+  </main>
+
+  <!-- Les effets restent hors du disque : ils ne tournent jamais avec lui. -->
+  <div class="effects-layer" id="result-effects" aria-hidden="true" hidden></div>
+
+  <!-- Une seule représentation réutilisée pour l'apparition et le dialogue.
+       Le PNG facultatif remplace ce paquet uniquement s'il se charge. -->
+  <template id="reward-template">
+    <div class="reward-visual">
+      <div class="reward-aura"></div>
+      <span class="reward-star reward-star--one">✦</span>
+      <span class="reward-star reward-star--two">✦</span>
+      <span class="reward-star reward-star--three">✦</span>
+      <div class="reward-object">
+        <img class="reward-image" alt="Booster Pokémon supplémentaire" hidden>
+        <div class="bonus-pack">
+          <span class="bonus-pack-brand">POKEDROP</span>
+          <svg class="bonus-pack-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M5 15h22v13H5zM3 10h26v5H3zM16 10v18M16 10H9a4 4 0 1 1 4-4l3 4Zm0 0h7a4 4 0 1 0-4-4l-3 4Z"/>
+          </svg>
+          <strong>BOOSTER<br><span>BONUS</span></strong>
+          <span class="bonus-pack-caption">RÉCOMPENSE FIDÉLITÉ</span>
+        </div>
+      </div>
+    </div>
+  </template>
+
+  <dialog class="result-modal" id="result-modal" aria-labelledby="result-title" aria-describedby="result-message result-thanks">
+    <div class="result-content">
+      <div class="result-reward" id="result-reward" hidden></div>
+      <div class="result-emblem" aria-hidden="true">
+        <svg class="result-trophy" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M18 10h28v15c0 10-6 16-14 16s-14-6-14-16V10ZM18 16H8v7c0 8 5 12 13 12M46 16h10v7c0 8-5 12-13 12M32 41v12M22 55h20M24 60h16"/>
+          <path d="m32 16 3 6 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1Z" fill="currentColor" stroke-width="1"/>
+        </svg>
+        <svg class="result-cross" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round"><path d="m21 21 22 22m0-22L21 43"/></svg>
+      </div>
+      <p class="result-kicker" id="result-kicker"></p>
+      <h2 id="result-title"></h2>
+      <p class="result-message" id="result-message"></p>
+      <p class="result-thanks" id="result-thanks"></p>
+      <button class="close-button" id="close-result" type="button" autofocus>CONTINUER <span aria-hidden="true">→</span></button>
+    </div>
+  </dialog>
+</body>
+</html>
